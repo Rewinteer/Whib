@@ -1,4 +1,2 @@
-FROM ubuntu:latest
-LABEL authors="rewinteer"
-
-ENTRYPOINT ["top", "-b"]
+FROM postgis/postgis:17-3.5
+EXPOSE 5432

@@ -1,4 +1,2 @@
-FROM ubuntu:latest
-LABEL authors="rewinteer"
-
-ENTRYPOINT ["top", "-b"]
+FROM redis:latest
+EXPOSE 6379

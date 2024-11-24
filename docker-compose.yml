@@ -1,0 +1,40 @@
+services:
+  bot:
+    build:
+      context: ./bot
+    depends_on:
+      - db
+      - redis
+    environment:
+      - FLASK_ENV=development
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - REDIS_URL=redis://redis:6379/0
+    networks:
+      - botnet
+    ports:
+       - "5000:5000"
+
+  db:
+    build:
+      context: ./db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./data/whib_db.sql:/docker-entrypoint-initdb.d/whib_db.sql
+    networks:
+      - botnet
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+
+  redis:
+    build:
+      context: ./redis
+    networks:
+      - botnet
+volumes:
+  db_data:
+
+networks:
+  botnet:
+    name: whib_network
