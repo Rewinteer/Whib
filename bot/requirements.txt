@@ -1,0 +1,7 @@
+Flask
+python-telegram-bot
+Flask-SQLAlchemy
+postgres
+gunicorn
+psycopg2
+redis
