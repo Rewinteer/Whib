@@ -1,6 +1,6 @@
 
 from sqlalchemy.orm import relationship
-from .db_connection import Base
+from bot.database.db_connection import Base
 from sqlalchemy import Column, types, ForeignKey
 from geoalchemy2 import types as geom_types
 
@@ -23,7 +23,8 @@ class District(Base):
 class Place(Base):
     __tablename__ = 'places'
     id = Column(types.Integer, primary_key=True)
-    name = Column(types.VARCHAR)
+    name_be = Column(types.VARCHAR)
+    name_ru = Column(types.VARCHAR)
     other_names = Column(types.JSON)
     display_name = Column(types.VARCHAR)
     type = Column(types.VARCHAR)

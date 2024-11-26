@@ -1,0 +1,33 @@
+2024-11-26 15:13:42,397 - GlobalLogger - INFO - returned places found by the prompt: Минс
+2024-11-26 15:30:37,874 - GlobalLogger - INFO - returned places found by the prompt: "Минс"
+2024-11-26 15:31:38,543 - GlobalLogger - INFO - returned places found by the prompt: "Минс"
+2024-11-26 15:34:05,942 - GlobalLogger - ERROR - failed to find places - object of type 'ChunkedIteratorResult' has no len()
+2024-11-26 15:34:31,586 - GlobalLogger - INFO - returned places found by the prompt: "Минс"
+2024-11-26 15:37:35,908 - GlobalLogger - INFO - returned places found by the prompt: "Минс"
+2024-11-26 15:37:50,320 - GlobalLogger - INFO - returned places found by the prompt: "Минс"
+2024-11-26 15:38:03,188 - GlobalLogger - INFO - returned places found by the prompt: "Мин"
+2024-11-26 15:44:01,906 - GlobalLogger - INFO - returned places found by the prompt: "Мин"
+2024-11-26 15:50:52,449 - GlobalLogger - INFO - returned places found by the prompt: "Мин"
+2024-11-26 15:51:19,673 - GlobalLogger - INFO - returned places found by the prompt: "Мин"
+2024-11-26 16:05:48,793 - GlobalLogger - INFO - returned places found by the prompt: "Мин"
+2024-11-26 16:12:36,693 - GlobalLogger - INFO - created a new user with chat id:234
+2024-11-26 16:15:22,723 - GlobalLogger - INFO - created a new user with chat id:234
+2024-11-26 16:24:29,071 - GlobalLogger - INFO - returned places found by the prompt: "Минск"
+2024-11-26 16:25:30,258 - GlobalLogger - ERROR - failed to create a visit for tg_chat_id 234 and POINT(27.5618225 53.9024716)
+2024-11-26 16:29:32,557 - GlobalLogger - INFO - added a new visit for chat 234 to POINT(27.5618225 53.9024716)
+2024-11-26 19:21:42,652 - GlobalLogger - ERROR - failed do load visited regions - (psycopg2.errors.UndefinedFunction) function st_within(geography, geography) does not exist
+LINE 1: SELECT regions.name, ST_Within(visits.location, regions.loca...
+                             ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+
+[SQL: SELECT regions.name, ST_Within(visits.location, regions.location) AS visited, ST_AsBinary(regions.location) AS location 
+FROM regions JOIN visits ON visits.tg_chat_id = %(tg_chat_id_1)s]
+[parameters: {'tg_chat_id_1': 234}]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2024-11-26 19:32:40,791 - GlobalLogger - INFO - returned visited regions for chat id: 234
+2024-11-26 19:35:33,555 - GlobalLogger - INFO - returned visited regions for chat id: 234
+2024-11-26 19:36:30,255 - GlobalLogger - INFO - returned visited regions for chat id: 234
+2024-11-26 19:36:50,824 - GlobalLogger - INFO - returned visited <class 'models.Region'> for chat id: 234
+2024-11-26 19:40:25,876 - GlobalLogger - INFO - returned visited <class 'models.Region'> for chat id: 234
+2024-11-26 19:43:06,873 - GlobalLogger - INFO - returned visited <class 'models.Region'> for chat id: 234
+2024-11-26 19:52:05,700 - GlobalLogger - INFO - returned visited <class 'models.District'> for chat id: 234

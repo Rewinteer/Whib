@@ -1,4 +1,5 @@
-from .config import DATABASE_URL
+from bot.database.config import DATABASE_URL
+from bot.logging_config import logger
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session, declarative_base
 
@@ -14,10 +15,11 @@ def get_session():
         yield session
     except Exception as e:
         session.rollback()
+        logger.error(f'failed to create scoped session - {e}')
         raise e
     finally:
         ScopedSession.remove()
 
 
 if __name__ == '__main__':
-    print(DATABASE_URL)
+    ...
