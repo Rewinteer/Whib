@@ -1,5 +1,5 @@
 from bot.database.db_connection import get_session
-from models import User, Place, Visit, Region, District
+from bot.database.models import User, Place, Visit, Region, District
 from bot.logging_config import logger
 from sqlalchemy import select, or_, cast
 from geoalchemy2 import functions, Geometry
@@ -61,7 +61,7 @@ District would be processed by default
 """
 
 
-def get_visited(tg_chat_id, class_name):
+def get_visited(tg_chat_id: int, class_name: str):
     if class_name is None or class_name.capitalize().startswith('D'):
         class_name = District
     else:
@@ -72,13 +72,11 @@ def get_visited(tg_chat_id, class_name):
         stmt = select(
             class_name.name.label('name'),
             functions.ST_Within(cast(Visit.location, Geometry), cast(class_name.location, Geometry)).label('visited'),
-            class_name.location.label('location')
+            functions.ST_AsText(class_name.location).label('location')
         ).join(Visit, Visit.tg_chat_id == tg_chat_id)
-        print(stmt)
         result = session.execute(stmt).fetchall()
         logger.info(f'returned visited {class_name} for chat id: {tg_chat_id}')
         return result
-        # RESULT SHOULD BE AVAILABLE TO GEOPANDAS PROCESSING
     except Exception as e:
         logger.error(f'failed do load visited regions - {e}')
         session.rollback()

@@ -37,6 +37,8 @@ services:
       context: ./redis
     networks:
       - botnet
+    ports:
+      - "6379:6379"
 volumes:
   db_data:
 

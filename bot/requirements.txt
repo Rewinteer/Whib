@@ -7,4 +7,6 @@ psycopg2
 redis
 python-dotenv
 GeoAlchemy2
+pandas
 geopandas
+matplotlib
