@@ -1,6 +1,9 @@
+from argparse import ArgumentError
+
 from bot.database.db_connection import get_session
 from bot.database.models import User, Place, Visit, Region, District
 from bot.logging_config import logger
+from bot.services.cache import cache_decorator, delete_cache_decorator
 from sqlalchemy import select, or_, cast
 from geoalchemy2 import functions, Geometry
 
@@ -18,8 +21,7 @@ def create_user(tg_chat_id):
     finally:
         session.close()
 
-
-def get_places(prompt):
+def get_places(tg_chat_id, prompt):
     session = next(get_session())
     try:
         stmt = select(Place.id, Place.display_name, functions.ST_AsText(Place.location)).where(
@@ -39,7 +41,7 @@ def get_places(prompt):
     finally:
         session.close()
 
-
+@delete_cache_decorator
 def add_visit(tg_chat_id, location):
     session = next(get_session())
     try:
@@ -54,28 +56,25 @@ def add_visit(tg_chat_id, location):
     finally:
         session.close()
 
-
-"""
-class_name arg should specify either Region or District should be returned
-District would be processed by default
-"""
-
-
-def get_visited(tg_chat_id: int, class_name: str):
-    if class_name is None or class_name.capitalize().startswith('D'):
-        class_name = District
+@cache_decorator
+def get_visited(tg_chat_id: int, unit_flag: str):
+    if unit_flag == District.__name__:
+        unit = District
+    elif unit_flag == Region.__name__:
+        unit = Region
     else:
-        class_name = Region
+        raise TypeError('Wrong adm_unit. Only "District" or "Region" are allowed')
 
     session = next(get_session())
     try:
         stmt = select(
-            class_name.name.label('name'),
-            functions.ST_Within(cast(Visit.location, Geometry), cast(class_name.location, Geometry)).label('visited'),
-            functions.ST_AsText(class_name.location).label('location')
+            unit.name.label('name'),
+            functions.ST_Within(cast(Visit.location, Geometry), cast(unit.location, Geometry)).label('visited'),
+            functions.ST_AsText(unit.location).label('location')
         ).join(Visit, Visit.tg_chat_id == tg_chat_id)
-        result = session.execute(stmt).fetchall()
-        logger.info(f'returned visited {class_name} for chat id: {tg_chat_id}')
+        rows = session.execute(stmt).fetchall()
+        result = [tuple(row) for row in rows]
+        logger.info(f'returned visited {unit} for chat id: {tg_chat_id}')
         return result
     except Exception as e:
         logger.error(f'failed do load visited regions - {e}')
@@ -85,6 +84,5 @@ def get_visited(tg_chat_id: int, class_name: str):
 
 
 if __name__ == '__main__':
-    result = get_visited(234, 'District')
-    for row in result:
-        print(row)
+    x = get_visited(tg_chat_id=234, unit_flag=District.__name__)
+    print(x)

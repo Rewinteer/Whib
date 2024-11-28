@@ -7,9 +7,11 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 import tempfile
 
+from bot.database.models import District
 
-def get_visited_map(tg_chat_id: int, class_name: str):
-    visited_list = db_utils.get_visited(tg_chat_id, class_name)
+
+def get_visited_map(tg_chat_id: int, unit_flag: str):
+    visited_list = db_utils.get_visited(tg_chat_id=tg_chat_id, unit_flag=unit_flag)
     df = pd.DataFrame.from_records(visited_list, columns=['name', 'is_visited', 'geometry'])
     df['geometry'] = gpd.GeoSeries.from_wkt(df['geometry'])
 
@@ -18,7 +20,7 @@ def get_visited_map(tg_chat_id: int, class_name: str):
 
     visited = gdf['is_visited'].sum()
     total_rows = len(gdf)
-    districts = total_rows > 7
+    districts = unit_flag == District.__name__
     fig_note = strings.visited_districts(visited, total_rows) if districts else strings.visited_regions(visited, total_rows)
 
     fig, ax = plt.subplots()

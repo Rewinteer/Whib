@@ -20,6 +20,7 @@ class District(Base):
     name_en = Column(types.VARCHAR)
     location = Column(geom_types.Geography(geometry_type='GEOMETRY'))
 
+
 class Place(Base):
     __tablename__ = 'places'
     id = Column(types.Integer, primary_key=True)
@@ -36,6 +37,7 @@ class Region(Base):
     name = Column(types.VARCHAR)
     name_en = Column(types.VARCHAR)
     location = Column(geom_types.Geography)
+
 
 class User(Base):
     __tablename__ = 'users'

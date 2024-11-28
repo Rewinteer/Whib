@@ -97,3 +97,54 @@ FROM regions JOIN visits ON visits.tg_chat_id = %(tg_chat_id_1)s]
 2024-11-27 15:45:18,938 - GlobalLogger - INFO - returned visited <class 'bot.database.models.Region'> for chat id: 234
 2024-11-27 15:45:49,282 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 234
 2024-11-27 15:50:28,351 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 234
+2024-11-28 12:25:00,294 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited
+2024-11-28 12:25:00,486 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 234
+2024-11-28 12:25:00,487 - GlobalLogger - INFO - added to redis entry with key: 234:get_visited
+2024-11-28 12:26:57,301 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited
+2024-11-28 12:28:25,356 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 234
+2024-11-28 12:28:25,357 - GlobalLogger - INFO - added to redis entry with key: 234:get_visited
+2024-11-28 12:28:52,020 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 234
+2024-11-28 12:28:52,020 - GlobalLogger - INFO - added to redis entry with key: 234:get_visited
+2024-11-28 12:30:15,307 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 234
+2024-11-28 12:30:15,308 - GlobalLogger - INFO - added to redis entry with key: 234:get_visited
+2024-11-28 12:49:52,213 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 234
+2024-11-28 12:50:50,471 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 234
+2024-11-28 12:51:16,964 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 234
+2024-11-28 12:53:07,862 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 234
+2024-11-28 12:55:22,258 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 234
+2024-11-28 12:56:53,986 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 234
+2024-11-28 12:56:54,000 - GlobalLogger - INFO - added to redis entry with key: 234:get_visited
+2024-11-28 12:57:14,894 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited
+2024-11-28 16:11:33,645 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited
+2024-11-28 16:23:59,558 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 234
+2024-11-28 16:23:59,573 - GlobalLogger - INFO - added to redis entry with key: 234:get_visited:District
+2024-11-28 16:24:08,256 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-28 16:24:27,491 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-28 16:25:08,937 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-28 16:36:09,705 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-28 16:39:24,766 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-28 17:01:50,584 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-28 17:02:04,234 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-28 17:02:36,375 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-28 17:02:51,690 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-28 17:04:02,682 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-28 17:05:58,827 - GlobalLogger - INFO - deleted from redis cache entry with key: 234:get_visited
+2024-11-28 17:06:35,116 - GlobalLogger - INFO - deleted from redis cache entry with key: 234:get_visited
+2024-11-28 17:06:57,416 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-28 17:07:37,990 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-28 17:09:33,256 - GlobalLogger - INFO - deleted from redis cache entry with key: 234:get_visited:District
+2024-11-28 17:10:52,764 - GlobalLogger - INFO - deleted from redis cache entry with key: 234:get_visited:District
+2024-11-28 17:22:14,396 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 234
+2024-11-28 17:22:26,889 - GlobalLogger - INFO - added to redis entry with key: 234:get_visited:District
+2024-11-28 17:23:32,649 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-28 17:23:43,913 - GlobalLogger - INFO - deleted from redis cache entry with key: 234:get_visited:District
+2024-11-28 17:23:51,060 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 234
+2024-11-28 17:23:51,076 - GlobalLogger - INFO - added to redis entry with key: 234:get_visited:District
+2024-11-28 17:31:53,887 - GlobalLogger - INFO - deleted from redis cache entry with key: 234:get_visited:District
+2024-11-28 17:34:13,206 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 234
+2024-11-28 17:36:00,165 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 234
+2024-11-28 17:42:58,032 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 234
+2024-11-28 17:43:18,159 - GlobalLogger - INFO - added to redis entry with key: 234:get_visited:District
+2024-11-28 17:43:54,693 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-28 17:44:37,842 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-28 17:44:51,628 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
