@@ -47,7 +47,7 @@ def get_visited_map(tg_chat_id: int, unit_flag: str):
     # bot link
     fig.text(0.2, 0.1, strings.bot_link, fontsize=10, ha='left', va='bottom')
 
-    plt.savefig('visited_map.png', dpi=150, bbox_inches='tight')
+    plt.savefig(f'/tmp/{tg_chat_id}:{unit_flag}:visited_map.png', dpi=150, bbox_inches='tight')
 
 if __name__ == '__main__':
     get_visited_map(234, 'District')
