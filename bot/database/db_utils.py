@@ -1,5 +1,4 @@
-from argparse import ArgumentError
-
+import bot.services.map as map
 from bot.database.db_connection import get_session
 from bot.database.models import User, Place, Visit, Region, District
 from bot.logging_config import logger
@@ -18,10 +17,12 @@ def create_user(tg_chat_id):
     except Exception as e:
         logger.error(f'failed to create user with chat id:{tg_chat_id} - {e}')
         session.rollback()
+        raise e
     finally:
         session.close()
 
-def get_places(tg_chat_id, prompt):
+
+def get_places(prompt):
     session = next(get_session())
     try:
         stmt = select(Place.id, Place.display_name, functions.ST_AsText(Place.location)).where(
@@ -32,14 +33,17 @@ def get_places(tg_chat_id, prompt):
         )
 
         # returns list of tuples [(id, display_name, WKT location)]
-        result = session.execute(stmt).fetchall()
+        data = session.execute(stmt).fetchall()
+        result = [tuple(row) for row in data]
         logger.info(f'returned places found by the prompt: "{prompt}"')
         return result
     except Exception as e:
         logger.error(f'failed to find places - {e}')
         session.rollback()
+        raise e
     finally:
         session.close()
+
 
 @delete_cache_decorator
 def add_visit(tg_chat_id, location):
@@ -49,12 +53,14 @@ def add_visit(tg_chat_id, location):
         session.add(new_visit)
         session.commit()
         logger.info(f'added a new visit for chat {tg_chat_id} to {location}')
+        map.remove_generated_maps(tg_chat_id)
     except Exception as e:
         logger.error(f'failed to create a visit for tg_chat_id {tg_chat_id} and {location}')
         session.rollback()
         raise e
     finally:
         session.close()
+
 
 @cache_decorator
 def get_visited(tg_chat_id: int, unit_flag: str):
@@ -63,7 +69,7 @@ def get_visited(tg_chat_id: int, unit_flag: str):
     elif unit_flag == Region.__name__:
         unit = Region
     else:
-        raise TypeError('Wrong adm_unit. Only "District" or "Region" are allowed')
+        raise TypeError('Wrong mandatory adm_unit arg. Only "District" or "Region" are allowed')
 
     session = next(get_session())
     try:
@@ -79,10 +85,10 @@ def get_visited(tg_chat_id: int, unit_flag: str):
     except Exception as e:
         logger.error(f'failed do load visited regions - {e}')
         session.rollback()
+        raise e
     finally:
         session.close()
 
 
 if __name__ == '__main__':
-    x = get_visited(tg_chat_id=234, unit_flag=District.__name__)
-    print(x)
+    create_user(345)

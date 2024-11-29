@@ -6,12 +6,12 @@ from bot.logging_config import logger
 r_conn = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB, decode_responses=True)
 
 
-
 def get_cache_key(tg_chat_id, operation, flag):
     key = f'{tg_chat_id}:{operation}'
     if flag:
         key = key + f':{flag}'
     return key
+
 
 def get_key_from_fun(db_func, arg_dict):
     tg_chat_id = arg_dict['tg_chat_id']
@@ -23,6 +23,7 @@ def get_key_from_fun(db_func, arg_dict):
             break
     return get_cache_key(tg_chat_id, operation, flag)
 
+
 def add_to_cache(key, result):
     try:
         json_result = json.dumps(result)
@@ -32,6 +33,7 @@ def add_to_cache(key, result):
     r_conn.set(key, json_result)
     logger.info(f'added to redis entry with key: {key}')
 
+
 def get_from_cache(key):
     result = r_conn.get(key)
     if result:
@@ -39,9 +41,11 @@ def get_from_cache(key):
         logger.info(f'got from redis cache entry with key: {key}')
         return deserialized_result
 
+
 def delete_from_cache(key):
     r_conn.delete(key)
     logger.info(f'deleted from redis cache entry with key: {key}')
+
 
 def cache_decorator(db_func):
     def wrapper(*args, **kwargs):
@@ -54,7 +58,9 @@ def cache_decorator(db_func):
         if result:
             add_to_cache(key, result)
         return result
+
     return wrapper
+
 
 def delete_cache_decorator(db_func):
     def wrapper(*args, **kwargs):
@@ -63,6 +69,7 @@ def delete_cache_decorator(db_func):
         if result:
             delete_from_cache(key)
         return result
+
     return wrapper
 
 

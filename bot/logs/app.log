@@ -1,0 +1,133 @@
+2024-11-28 18:23:22,210 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-28 18:23:22,701 - GlobalLogger - INFO - created a map file 
+2024-11-28 18:23:45,501 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-28 18:23:45,991 - GlobalLogger - INFO - created a map file 234:District:visited_map.png
+2024-11-28 18:25:00,885 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-28 18:25:01,373 - GlobalLogger - INFO - created a map file 234:Districts:visited_map.png
+2024-11-28 18:25:44,342 - GlobalLogger - INFO - returned visited <class 'bot.database.models.Region'> for chat id: 234
+2024-11-28 18:25:44,354 - GlobalLogger - INFO - added to redis entry with key: 234:get_visited:Region
+2024-11-28 18:25:44,703 - GlobalLogger - INFO - created a map file 234:Regions:visited_map.png
+2024-11-28 18:25:51,546 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:Region
+2024-11-28 18:25:51,868 - GlobalLogger - INFO - created a map file 234:Regions:visited_map.png
+2024-11-28 18:28:01,419 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:Region
+2024-11-28 18:28:01,765 - GlobalLogger - INFO - created a map file 234:Regions:visited_map.png
+2024-11-28 18:43:48,920 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:Region
+2024-11-28 18:43:49,286 - GlobalLogger - INFO - created a map file 234:Regions:visited_map.png
+2024-11-29 15:04:03,211 - GlobalLogger - INFO - got tmp/234:Regions:visited_map.png map from the server without recreation
+2024-11-29 15:04:34,092 - GlobalLogger - INFO - got tmp/234:Districts:visited_map.png map from the server without recreation
+2024-11-29 15:58:40,943 - GlobalLogger - INFO - got tmp/234:Districts:visited_map.png map from the server without recreation
+2024-11-29 15:58:52,332 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 345
+2024-11-29 15:58:52,674 - GlobalLogger - INFO - created a map file 345:Districts:visited_map.png
+2024-11-29 16:01:03,774 - GlobalLogger - INFO - got tmp/345:Districts:visited_map.png map from the server without recreation
+2024-11-29 16:01:20,849 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 345
+2024-11-29 16:05:41,349 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 345
+2024-11-29 16:05:41,376 - GlobalLogger - INFO - added to redis entry with key: 345:get_visited:District
+2024-11-29 16:05:41,881 - GlobalLogger - INFO - created a map file 345:Districts:visited_map.png
+2024-11-29 16:06:19,994 - GlobalLogger - INFO - got tmp/345:Districts:visited_map.png map from the server without recreation
+2024-11-29 16:06:30,646 - GlobalLogger - INFO - got from redis cache entry with key: 345:get_visited:District
+2024-11-29 16:06:31,135 - GlobalLogger - INFO - created a map file 345:Districts:visited_map.png
+2024-11-29 16:07:18,640 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 456
+2024-11-29 16:08:09,857 - GlobalLogger - INFO - returned visited <class 'bot.database.models.District'> for chat id: 456
+2024-11-29 16:08:09,858 - GlobalLogger - INFO - visited list for 456 is empty
+2024-11-29 16:30:01,334 - GlobalLogger - ERROR - failed to create user with chat id:345 - (psycopg2.errors.UniqueViolation) duplicate key value violates unique constraint "unique_chat_id"
+DETAIL:  Key (tg_chat_id)=(345) already exists.
+
+[SQL: INSERT INTO users (tg_chat_id) VALUES (%(tg_chat_id)s) RETURNING users.id]
+[parameters: {'tg_chat_id': 345}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2024-11-29 16:32:22,397 - GlobalLogger - ERROR - failed to create user with chat id:345 - (psycopg2.errors.UniqueViolation) duplicate key value violates unique constraint "unique_chat_id"
+DETAIL:  Key (tg_chat_id)=(345) already exists.
+
+[SQL: INSERT INTO users (tg_chat_id) VALUES (%(tg_chat_id)s) RETURNING users.id]
+[parameters: {'tg_chat_id': 345}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2024-11-29 17:43:38,941 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 17:43:38,941 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 17:46:31,277 - GlobalLogger - INFO - returned places found by the prompt: "ÐÑÑ"
+2024-11-29 17:46:31,278 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 17:46:31] "[35m[1mGET /places?prompt=Ð\x91Ñ\x8bÑ HTTP/1.1[0m" 500 -
+2024-11-29 17:47:12,793 - GlobalLogger - INFO - returned places found by the prompt: "ÐÑÑ"
+2024-11-29 17:47:12,795 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 17:47:12] "[35m[1mGET /places?prompt=Ð\x91Ñ\x8bÑ HTTP/1.1[0m" 500 -
+2024-11-29 17:47:21,838 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 17:47:21,838 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 17:49:27,061 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 17:49:27,061 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 17:51:09,121 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 17:51:09,121 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 17:51:40,147 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 17:51:40,147 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 17:52:24,060 - GlobalLogger - ERROR - failed to find places - can't concat str to bytes
+2024-11-29 17:55:11,904 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 17:55:11,904 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 17:55:19,182 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 17:55:19,182 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 17:55:36,744 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 17:55:36,744 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 17:58:00,190 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 17:58:00,190 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 17:59:54,198 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 17:59:54,198 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 18:01:45,036 - GlobalLogger - INFO - returned places found by the prompt: "Бых"
+2024-11-29 18:02:43,251 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 18:02:43,251 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 18:02:56,559 - GlobalLogger - INFO - returned places found by the prompt: "Бых"
+2024-11-29 18:04:05,877 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 18:04:05] "GET /places?prompt=бых HTTP/1.1" 200 -
+2024-11-29 18:05:45,695 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 18:05:45,695 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 18:05:47,199 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 18:05:47] "GET /places?prompt=бых HTTP/1.1" 200 -
+2024-11-29 18:05:49,197 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 18:05:49] "GET /places?prompt=бых HTTP/1.1" 200 -
+2024-11-29 18:06:14,746 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 18:06:14,746 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 18:09:11,403 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 18:09:11] "GET /places?prompt=бых HTTP/1.1" 200 -
+2024-11-29 18:12:14,793 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 18:12:14] "[31m[1m-G /places HTTP/1.1[0m" 405 -
+2024-11-29 18:12:38,641 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 18:12:38] "[31m[1m-G /places HTTP/1.1[0m" 405 -
+2024-11-29 18:14:57,487 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 18:14:57,488 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 18:15:00,345 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 18:15:00] "[31m[1mGET /visits?tg_chat_id=234 HTTP/1.1[0m" 400 -
+2024-11-29 18:16:02,517 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 18:16:02] "[31m[1mGET /visits?tg_chat_id=234 HTTP/1.1[0m" 400 -
+2024-11-29 18:16:26,734 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 18:16:26,735 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 18:16:59,681 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 18:16:59,681 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 18:17:18,803 - GlobalLogger - INFO - returned places found by the prompt: "Бых"
+2024-11-29 18:17:18,804 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 18:17:18] "GET /places?prompt=Бых HTTP/1.1" 200 -
+2024-11-29 18:17:18,988 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 18:17:18] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2024-11-29 18:17:42,445 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 18:17:42] "GET /places?prompt=Бых HTTP/1.1" 200 -
+2024-11-29 18:18:24,301 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-29 18:18:24,827 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 18:18:24] "[35m[1mGET /visits?tg_chat_id=234&unit_flag=District HTTP/1.1[0m" 500 -
+2024-11-29 18:19:33,984 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-29 18:19:34,427 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 18:19:34] "[35m[1mGET /visits?tg_chat_id=234&unit_flag=District HTTP/1.1[0m" 500 -
+2024-11-29 18:20:34,622 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-29 18:20:35,065 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 18:20:35] "[35m[1mGET /visits?tg_chat_id=234&unit_flag=District HTTP/1.1[0m" 500 -
+2024-11-29 18:21:05,702 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 18:21:05,702 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 18:21:16,456 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 18:21:16,456 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 18:21:48,853 - GlobalLogger - INFO - got services/tmp/234:Districts:visited_map.png map from the server without recreation
+2024-11-29 18:23:28,025 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-29 18:23:28,025 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-11-29 18:23:28,728 - GlobalLogger - INFO - got services/tmp/234:Districts:visited_map.png map from the server without recreation
+2024-11-29 18:23:28,741 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 18:23:28] "GET /visits?tg_chat_id=234&unit_flag=District HTTP/1.1" 200 -
+2024-11-29 18:23:33,760 - GlobalLogger - INFO - got services/tmp/234:Districts:visited_map.png map from the server without recreation
+2024-11-29 18:23:33,761 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 18:23:33] "[36mGET /visits?tg_chat_id=234&unit_flag=District HTTP/1.1[0m" 304 -
+2024-11-29 18:24:03,813 - GlobalLogger - INFO - got from redis cache entry with key: 234:get_visited:District
+2024-11-29 18:24:04,410 - GlobalLogger - INFO - created a map file 234:Districts:visited_map.png
+2024-11-29 18:24:04,411 - werkzeug - INFO - 127.0.0.1 - - [29/Nov/2024 18:24:04] "GET /visits?tg_chat_id=234&unit_flag=District HTTP/1.1" 200 -
