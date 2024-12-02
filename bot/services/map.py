@@ -11,7 +11,7 @@ from bot.logging_config import logger
 
 from bot.database.models import District
 
-map_path = 'services/tmp/'
+map_path = 'services/map_images/'
 
 
 def is_map_exists(path):
