@@ -1,10 +1,11 @@
-import bot.services.map as map
-from bot.database.db_connection import get_session
-from bot.database.models import User, Place, Visit, Region, District
-from bot.logging_config import logger
-from bot.services.cache import cache_decorator, delete_cache_decorator
-from sqlalchemy import select, or_, cast
 from geoalchemy2 import functions, Geometry
+from sqlalchemy import select, or_, cast
+
+import webapp.services.map as map
+from webapp.database.db_connection import get_session
+from webapp.database.models import User, Place, Visit, Region, District
+from webapp.logging_config import logger
+from webapp.services.cache import cache_decorator, delete_cache_decorator
 
 
 def create_user(tg_chat_id):

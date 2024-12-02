@@ -3,9 +3,9 @@ import json
 from flask import Flask, request, jsonify, send_file
 from sqlalchemy.exc import IntegrityError
 
-from bot.services.cache import r_conn
-from bot.database import db_utils
-from bot.services.map import get_visited_map
+from webapp.database import db_utils
+from webapp.services.cache import r_conn
+from webapp.services.map import get_visited_map
 
 app = Flask(__name__)
 
@@ -58,18 +58,21 @@ def places():
             data = json.loads(cached_data)
         else:
             data = db_utils.get_places(prompt)
+            if not data:
+                return 'Place not found', 404
             json_data = json.dumps(data)
             r_conn.set(prompt, json_data, ex=600)
 
         start = (page - 1) * page_size
         end = start + page_size
         paginated_data = data[start:end]
+        total_items = len(data)
 
         return jsonify({
             'data': paginated_data,
             'page': page,
             'page_size': page_size,
-            'total': len(data)
+            'total_pages': (total_items + page_size - 1) // page_size
         })
 
     except KeyError:

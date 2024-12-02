@@ -1,17 +1,16 @@
 import os.path
 
-from matplotlib.patches import Patch
-
-import bot.database.db_utils as db_utils
-import bot.strings as strings
-import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from bot.logging_config import logger
+import pandas as pd
+from matplotlib.patches import Patch
 
-from bot.database.models import District
+import res.strings as strings
+import webapp.database.db_utils as db_utils
+from webapp.database.models import District
+from webapp.logging_config import logger
 
-map_path = 'services/map_images/'
+map_path = 'map_images/'
 
 
 def is_map_exists(path):
@@ -90,4 +89,4 @@ def get_visited_map(tg_chat_id: int, unit_flag: str):
 
 
 if __name__ == '__main__':
-    get_visited_map(456, 'District')
+    get_visited_map(234, 'District')

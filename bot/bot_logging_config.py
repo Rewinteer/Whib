@@ -1,12 +1,12 @@
 import logging
 import os
-from pathlib import Path
 from logging import getLogger
+from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 
 LOG_DIR = BASE_DIR / 'logs'
-LOG_FILE = LOG_DIR / 'app.log'
+LOG_FILE = LOG_DIR / 'bot.log'
 
 if not os.path.exists(LOG_DIR):
     os.makedirs(LOG_DIR)
@@ -20,4 +20,4 @@ logging.basicConfig(
     ]
 )
 
-logger = getLogger('GlobalLogger')
+logger = getLogger('BotLogger')
