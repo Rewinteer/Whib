@@ -26,6 +26,11 @@ def get_key_from_fun(db_func, arg_dict):
     return get_cache_key(tg_chat_id, operation, flag)
 
 
+def get_chat_id(db_func, arg_dict):
+    tg_chat_id = arg_dict['tg_chat_id']
+    return tg_chat_id
+
+
 def add_to_cache(key, result):
     try:
         json_result = json.dumps(result)
@@ -44,9 +49,11 @@ def get_from_cache(key):
         return deserialized_result
 
 
-def delete_from_cache(key):
-    r_conn.delete(key)
-    logger.info(f'deleted from redis cache entry with key: {key}')
+def delete_from_cache(tg_chat_id):
+    # r_conn.delete(key)
+    logger.info(f'deleted from redis cache entry with pattern: {tg_chat_id}')
+    for k in r_conn.scan_iter(f'{tg_chat_id}*'):
+        r_conn.delete(k)
 
 
 def cache_decorator(db_func):
@@ -66,10 +73,9 @@ def cache_decorator(db_func):
 
 def delete_cache_decorator(db_func):
     def wrapper(*args, **kwargs):
-        key = get_key_from_fun(db_func, kwargs)
+        tg_chat_id = get_chat_id(db_func, kwargs)
         result = db_func(*args, **kwargs)
-        if result:
-            delete_from_cache(key)
+        delete_from_cache(tg_chat_id)
         return result
 
     return wrapper

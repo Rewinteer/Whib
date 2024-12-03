@@ -1,4 +1,6 @@
 import json
+import os.path
+import time
 
 from flask import Flask, request, jsonify, send_file
 from sqlalchemy.exc import IntegrityError
@@ -28,8 +30,15 @@ def visits():
         try:
             tg_chat_id = int(request.args['tg_chat_id'])
             unit_flag = request.args['unit_flag']
-            map_path = get_visited_map(tg_chat_id, unit_flag)
-            return send_file(map_path, as_attachment=True)
+            rel_map_path = get_visited_map(tg_chat_id, unit_flag)
+
+            if rel_map_path is None:
+                return 'Visited list is empty', 204
+
+            while not os.path.exists(rel_map_path):
+                time.sleep(0.1)
+            abs_map_path = os.path.join(os.path.dirname(__file__), 'services', rel_map_path)
+            return send_file(rel_map_path, as_attachment=True)
         except KeyError:
             return 'Mandatory parameters were not provided', 400
         except Exception as e:
@@ -38,7 +47,7 @@ def visits():
         try:
             tg_chat_id = request.form['tg_chat_id']
             location = request.form['location']
-            db_utils.add_visit(tg_chat_id, location)
+            db_utils.add_visit(tg_chat_id=tg_chat_id, location=location)
             return 'Visit successfully added', 201
         except KeyError:
             return 'Mandatory parameters were not provided', 400

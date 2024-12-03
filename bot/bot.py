@@ -1,3 +1,4 @@
+from pandas.errors import EmptyDataError
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes, ConversationHandler, \
     MessageHandler, filters
@@ -8,7 +9,6 @@ import res.strings as strings
 from bot_logging_config import logger
 from config import bot_config
 
-HANDLE_PROMPT, SHOW_PLACES, CONFIRM = range(3)
 
 async def error_handler(update, context):
     logger.error(f'Exception while handling an update - {context.error}')
@@ -26,10 +26,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         await update.message.reply_text(strings.bot_user_creation_error)
         logger.error(f'failed to create a new user with id {tg_chat_id} - {e}')
-    return 'HELLO'
 
 
-async def clear_context(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def clear_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.delete_message()
     context.user_data.clear()
 
 
@@ -52,7 +53,6 @@ async def handle_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 response['total_pages']
             )
         )
-        return HANDLE_PROMPT
 
     except FileNotFoundError as e:
         await update.message.reply_text(strings.bot_place_not_found)
@@ -79,12 +79,11 @@ async def handle_pagination(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_reply_markup(
             reply_markup=pagination.get_keyboard(response['data'], page, context.user_data['total_pages'])
         )
-        return SHOW_PLACES
     except Exception as e:
         logger.error(f'failed to paginate data - {e}')
 
 
-async def handle_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def handle_place_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         query = update.callback_query
         selected_place_id = int(query.data)
@@ -109,7 +108,6 @@ async def handle_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
         else:
             raise KeyError('cannot find the selected place')
-        return CONFIRM
 
     except Exception as e:
         logger.error(f'failed to send confirmation to the user - {e}')
@@ -118,8 +116,6 @@ async def handle_selection(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def handle_confirmation(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query =  update.callback_query
     await query.answer()
-
-    logger.debug('Confirmation handler is triggered')
 
     if query.data == 'yes':
         selected_place = context.user_data['selected_place']
@@ -137,28 +133,58 @@ async def handle_confirmation(update: Update, context: ContextTypes.DEFAULT_TYPE
         await query.delete_message()
 
     context.user_data.clear()
-    return CONFIRM
+
+
+async def visits_map_districts(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    tg_chat_id = update.effective_chat.id
+    unit_flag = 'District'
+    try:
+        map_file = await api_client.get_map(tg_chat_id, unit_flag)
+        if map_file is None:
+            await update.message.reply_text(strings.bot_empty_visits)
+            return
+
+        await context.bot.send_photo(
+            chat_id=tg_chat_id,
+            photo=map_file
+        )
+    except EmptyDataError:
+        await update.message.reply_text(strings.bot_empty_visits)
+    except Exception as e:
+        await update.message.reply_text(strings.bot_generic_error)
+
+
+async def visits_map_regions(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    tg_chat_id = update.effective_chat.id
+    unit_flag = 'Region'
+    try:
+        map_file = await api_client.get_map(tg_chat_id, unit_flag)
+        if map_file is None:
+            await update.message.reply_text(strings.bot_empty_visits)
+            return
+
+        file_name = 'visited_Belarusian_regions'
+        await context.bot.send_photo(
+            chat_id=tg_chat_id,
+            photo=map_file
+        )
+    except Exception as e:
+        await update.message.reply_text(strings.bot_generic_error)
 
 
 def main():
     application = Application.builder().token(bot_config.WHIB_TOKEN).build()
 
-    place_selection_handler = ConversationHandler(
-        entry_points=[MessageHandler(filters.TEXT & ~filters.COMMAND, handle_prompt),],
-        states={
-            HANDLE_PROMPT: [MessageHandler(filters.TEXT & ~filters.COMMAND, handle_prompt)],
-            SHOW_PLACES: [
-                CallbackQueryHandler(handle_pagination, pattern="^(next|prev)$"),
-                CallbackQueryHandler(handle_selection, pattern="^[0-9]+$"),
-            ],
-            CONFIRM: [CallbackQueryHandler(handle_confirmation, pattern="^(yes|no)$")],
-        },
-        fallbacks=[MessageHandler(filters.TEXT & ~filters.COMMAND, clear_context)]
-    )
-
-
-    application.add_handler(CommandHandler('start', start))
-    application.add_handler(place_selection_handler)
+    application.add_handlers(handlers=[
+        CommandHandler('start', start),
+        CommandHandler('visits_map_districts', visits_map_districts),
+        CommandHandler('visits_map_regions', visits_map_regions),
+        MessageHandler(filters.TEXT & ~filters.COMMAND, handle_prompt),
+        CallbackQueryHandler(handle_pagination, pattern="^(next|prev)$"),
+        CallbackQueryHandler(handle_place_selection, pattern="^[0-9]+$"),
+        CallbackQueryHandler(handle_confirmation, pattern="^(yes|no)$"),
+        CallbackQueryHandler(clear_message, pattern="^(discard)$")
+    ])
     application.add_error_handler(error_handler)
 
     logger.info("Bot is starting")

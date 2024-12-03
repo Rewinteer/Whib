@@ -10,7 +10,7 @@ import webapp.database.db_utils as db_utils
 from webapp.database.models import District
 from webapp.logging_config import logger
 
-map_path = 'map_images/'
+map_path = os.path.join(os.path.dirname(__file__), 'map_images/')
 
 
 def is_map_exists(path):
@@ -85,8 +85,8 @@ def get_visited_map(tg_chat_id: int, unit_flag: str):
 
     plt.savefig(f'{path}', dpi=150, bbox_inches='tight')
     logger.info(f'created a map file {filename}')
-    return path
+    return os.path.relpath(path)
 
 
 if __name__ == '__main__':
-    get_visited_map(234, 'District')
+    get_visited_map(267486540, 'District')

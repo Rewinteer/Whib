@@ -1,5 +1,5 @@
 from geoalchemy2 import functions, Geometry
-from sqlalchemy import select, or_, cast
+from sqlalchemy import select, or_, cast, exists, and_
 
 import webapp.services.map as map
 from webapp.database.db_connection import get_session
@@ -74,11 +74,27 @@ def get_visited(tg_chat_id: int, unit_flag: str):
 
     session = next(get_session())
     try:
-        stmt = select(
-            unit.name.label('name'),
-            functions.ST_Within(cast(Visit.location, Geometry), cast(unit.location, Geometry)).label('visited'),
-            functions.ST_AsText(unit.location).label('location')
-        ).join(Visit, Visit.tg_chat_id == tg_chat_id)
+        visits =(
+            select(
+                1
+            ).where(
+                and_(
+                    functions.ST_Within(cast(Visit.location, Geometry), cast(unit.location, Geometry)),
+                    Visit.tg_chat_id == tg_chat_id
+                )
+            ).exists())
+
+        stmt = (
+            select(
+                unit.name.label('name'),
+                visits.label('visited'),
+                functions.ST_AsText(unit.location).label('location'),
+            )
+        )
+
+
+        print(str(stmt.compile()))
+
         rows = session.execute(stmt).fetchall()
         result = [tuple(row) for row in rows]
         logger.info(f'returned visited {unit} for chat id: {tg_chat_id}')

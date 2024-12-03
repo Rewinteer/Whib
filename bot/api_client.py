@@ -1,4 +1,5 @@
 import aiohttp
+from pandas.errors import EmptyDataError
 
 from bot_logging_config import logger
 
@@ -15,7 +16,7 @@ async def create_user(tg_chat_id):
             if response.status == 400:
                 return response.status
             elif response.status != 201:
-                raise Exception(response.text())
+                raise Exception(response.reason)
 
 
 async def get_places(prompt, page):
@@ -26,7 +27,7 @@ async def get_places(prompt, page):
                 raise FileNotFoundError(f'No Results found for query: {prompt}')
             elif response.status != 200:
                 logger.error(f'Failed to get places from the api for the prompt: {prompt}')
-                raise Exception(f'{response.text()}')
+                raise Exception(response.reason)
             return await response.json()
 
 
@@ -40,7 +41,17 @@ async def add_visit(tg_chat_id, location):
             }
         ) as response:
             if response.status != 201:
-                logger.error(f'failed to add a visit - {response.text()}')
-                raise Exception(f'{response.text()}')
+                logger.error(f'failed to add a visit - {response.reason}')
+                raise Exception(response.reason)
 
 
+async def get_map(tg_chat_id, unit_flag):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f'{BASE_URL}/visits', params={'tg_chat_id': tg_chat_id, 'unit_flag': unit_flag}) as response:
+            if response.status == 200:
+                map_file = await response.read()
+                return map_file
+            elif response.status == 204:
+                return None
+            else:
+                raise Exception(response.reason)
