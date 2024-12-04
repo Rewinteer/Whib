@@ -1,6 +1,8 @@
-from bot.database.db_connection import Base
-from sqlalchemy import Column, types, ForeignKey
 from geoalchemy2 import types as geom_types
+from sqlalchemy import Column, types, ForeignKey
+
+from webapp.database.db_connection import Base
+
 
 class Boundary(Base):
     __tablename__ = 'boundaries'

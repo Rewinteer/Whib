@@ -1,7 +1,8 @@
-from bot.database.config import DATABASE_URL
-from bot.logging_config import logger
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session, declarative_base
+
+from config.db_config import DATABASE_URL
+from webapp.logging_config import logger
 
 Base = declarative_base()
 

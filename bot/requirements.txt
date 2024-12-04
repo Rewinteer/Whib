@@ -1,12 +1,2 @@
-Flask
+aiohttp
 python-telegram-bot
-Flask-SQLAlchemy
-postgres
-gunicorn
-psycopg2
-redis
-python-dotenv
-GeoAlchemy2
-pandas
-geopandas
-matplotlib
