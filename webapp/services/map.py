@@ -41,9 +41,6 @@ def get_visited_map(tg_chat_id: int, unit_flag: str):
         return path
 
     visited_list = db_utils.get_visited(tg_chat_id=tg_chat_id, unit_flag=unit_flag)
-    if not visited_list:
-        logger.info(f'visited list for tg_chat_id {tg_chat_id} is empty')
-        return None
 
     df = pd.DataFrame.from_records(visited_list, columns=['name', 'is_visited', 'geometry'])
     df['geometry'] = gpd.GeoSeries.from_wkt(df['geometry'])
@@ -52,6 +49,10 @@ def get_visited_map(tg_chat_id: int, unit_flag: str):
     gdf['color'] = gdf['is_visited'].map({True: '#3182bd', False: '#deebf7'})
 
     visited = gdf['is_visited'].sum()
+    if visited == 0:
+        logger.info(f'visited list for tg_chat_id {tg_chat_id} is empty')
+        return None
+
     total_rows = len(gdf)
     districts = unit_flag == District.__name__
     fig_note = strings.visited_districts(visited, total_rows) if districts else strings.visited_regions(visited,

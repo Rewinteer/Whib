@@ -172,6 +172,26 @@ async def visits_map_regions(update: Update, context: ContextTypes.DEFAULT_TYPE)
         await update.message.reply_text(strings.bot_generic_error)
 
 
+async def handle_attached_location(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    location = update.message.location
+    lat = location.latitude
+    lon = location.longitude
+    wkt = f'POINT ({lon} {lat})'
+
+    tg_chat_id = update.effective_chat.id
+
+    try:
+        await api_client.add_visit(tg_chat_id, wkt)
+
+        await update.message.reply_text(
+            strings.location_confirmed(lat, lon)
+        )
+    except Exception:
+        await update.message.reply_text(strings.bot_server_error)
+
+
+
+
 def main():
     application = Application.builder().token(bot_config.WHIB_TOKEN).build()
 
@@ -180,10 +200,11 @@ def main():
         CommandHandler('visits_map_districts', visits_map_districts),
         CommandHandler('visits_map_regions', visits_map_regions),
         MessageHandler(filters.TEXT & ~filters.COMMAND, handle_prompt),
+        MessageHandler(filters.LOCATION & ~filters.COMMAND, handle_attached_location),
         CallbackQueryHandler(handle_pagination, pattern="^(next|prev)$"),
         CallbackQueryHandler(handle_place_selection, pattern="^[0-9]+$"),
         CallbackQueryHandler(handle_confirmation, pattern="^(yes|no)$"),
-        CallbackQueryHandler(clear_message, pattern="^(discard)$")
+        CallbackQueryHandler(clear_message, pattern="^(discard)$"),
     ])
     application.add_error_handler(error_handler)
 

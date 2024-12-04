@@ -92,9 +92,6 @@ def get_visited(tg_chat_id: int, unit_flag: str):
             )
         )
 
-
-        print(str(stmt.compile()))
-
         rows = session.execute(stmt).fetchall()
         result = [tuple(row) for row in rows]
         logger.info(f'returned visited {unit} for chat id: {tg_chat_id}')

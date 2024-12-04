@@ -39,3 +39,6 @@ def you_selected(place_name):
 
 def selection_confirmed(place_name):
     return f'Візіт у {place_name} дададзены ў базу!'
+
+def location_confirmed(lat, lon):
+    return f'Лакацыя {lat} {lon} дададзена ў базу'
