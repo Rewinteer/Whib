@@ -6,7 +6,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 
 LOG_DIR = BASE_DIR / 'logs'
-LOG_FILE = LOG_DIR / 'bot.log'
+LOG_FILE = LOG_DIR / 'whib_bot.log'
 
 if not os.path.exists(LOG_DIR):
     os.makedirs(LOG_DIR)

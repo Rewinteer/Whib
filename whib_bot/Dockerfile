@@ -1,11 +1,13 @@
 FROM python:3.11-slim
 
-WORKDIR /bot
+WORKDIR /whib_bot
 
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+ENV PYTHONPATH=/whib_bot
 
-CMD ["python", "-u", "./bot.py"]
+COPY . /whib_bot
+
+CMD ["python", "-u", "main.py"]

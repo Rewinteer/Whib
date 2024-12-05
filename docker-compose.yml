@@ -1,9 +1,10 @@
 services:
   bot:
-    build:
-      context: ./bot
+    build: ./whib_bot
+    image: rewinteer/whib:whib-bot-1
+    restart: unless-stopped
     volumes:
-      - ./bot/logs:/logs
+      - ./whib_bot/logs:/whib_bot/logs
     depends_on:
       - db
       - redis
@@ -12,14 +13,14 @@ services:
       - WHIB_TOKEN=${WHIB_TOKEN}
     networks:
       - botnet
-    ports:
-       - "5000:5000"
 
   webapp:
-    build:
-      context: ./webapp
+    build: ./webapp
+    image: rewinteer/whib:whib-webapp-1
+    restart: unless-stopped
     volumes:
-      - ./webapp/logs:/logs
+      - ./webapp/logs:/webapp/logs
+      - ./webapp/services/map_images:/webapp/services/map_images
     depends_on:
       - db
       - redis
@@ -30,12 +31,11 @@ services:
       - LOG_LEVEL=INFO
     networks:
       - botnet
-    ports:
-      - "5000:5000"
 
   db:
-    build:
-      context: ./db
+    build: ./db
+    image: rewinteer/whib:whib-db-1
+    restart: unless-stopped
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./db/data/whib_db.sql:/docker-entrypoint-initdb.d/whib_db.sql
@@ -45,16 +45,14 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-    ports:
-      - "5433:5432"
 
   redis:
-    build:
-      context: ./redis
+    build: ./redis
+    image: rewinteer/whib:whib-redis-1
+    restart: unless-stopped
     networks:
       - botnet
-    ports:
-      - "6379:6379"
+
 volumes:
   db_data:
 
