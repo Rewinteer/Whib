@@ -1,8 +1,8 @@
 import aiohttp
 
 from bot_logging_config import logger
+from bot_config import BASE_URL
 
-BASE_URL = 'http://webapp:5000'
 
 async def create_user(tg_chat_id):
     async with aiohttp.ClientSession() as session:
