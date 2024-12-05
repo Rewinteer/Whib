@@ -1,13 +1,10 @@
-from pandas.errors import EmptyDataError
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes, ConversationHandler, \
-    MessageHandler, filters
+from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes, MessageHandler, filters
 
-import api_client
+import api_client, bot_config
 import pagination
-import res.strings as strings
+from res import strings
 from bot_logging_config import logger
-from config import bot_config
 
 
 async def error_handler(update, context):
@@ -54,7 +51,7 @@ async def handle_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
         )
 
-    except FileNotFoundError as e:
+    except FileNotFoundError:
         await update.message.reply_text(strings.bot_place_not_found)
 
     except Exception as e:
@@ -148,9 +145,7 @@ async def visits_map_districts(update: Update, context: ContextTypes.DEFAULT_TYP
             chat_id=tg_chat_id,
             photo=map_file
         )
-    except EmptyDataError:
-        await update.message.reply_text(strings.bot_empty_visits)
-    except Exception as e:
+    except Exception:
         await update.message.reply_text(strings.bot_generic_error)
 
 
@@ -163,12 +158,11 @@ async def visits_map_regions(update: Update, context: ContextTypes.DEFAULT_TYPE)
             await update.message.reply_text(strings.bot_empty_visits)
             return
 
-        file_name = 'visited_Belarusian_regions'
         await context.bot.send_photo(
             chat_id=tg_chat_id,
             photo=map_file
         )
-    except Exception as e:
+    except Exception:
         await update.message.reply_text(strings.bot_generic_error)
 
 

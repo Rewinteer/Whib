@@ -1,5 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-import res.strings as strings
+
+from res import strings
+
 
 def get_keyboard(data, page, total_pages):
     buttons = [

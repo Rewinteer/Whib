@@ -1,9 +1,9 @@
 services:
   bot:
     build:
-      context: ./bot
+      context: ./whib_bot
     volumes:
-      - ./bot/logs:/logs
+      - ./whib_bot/logs:/whib_bot/logs
     depends_on:
       - db
       - redis
@@ -12,14 +12,13 @@ services:
       - WHIB_TOKEN=${WHIB_TOKEN}
     networks:
       - botnet
-    ports:
-       - "5000:5000"
 
   webapp:
     build:
       context: ./webapp
     volumes:
-      - ./webapp/logs:/logs
+      - ./webapp/logs:/webapp/logs
+      - ./webapp/services/map_images:/webapp/services/map_images
     depends_on:
       - db
       - redis
@@ -55,6 +54,7 @@ services:
       - botnet
     ports:
       - "6379:6379"
+
 volumes:
   db_data:
 

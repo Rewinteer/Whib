@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.patches import Patch
 
-import res.strings as strings
-import webapp.database.db_utils as db_utils
+from webapp.res import strings
+from webapp.database import db_utils
 from webapp.database.models import District
 from webapp.logging_config import logger
 
@@ -81,7 +81,7 @@ def get_visited_map(tg_chat_id: int, unit_flag: str):
     else:
         fig.text(0.5, 0.9, strings.region_note, fontsize=8, ha='center', va='top')
 
-    # bot link
+    # whib_bot link
     fig.text(0.2, 0.1, strings.bot_link, fontsize=10, ha='left', va='bottom')
 
     plt.savefig(f'{path}', dpi=150, bbox_inches='tight')

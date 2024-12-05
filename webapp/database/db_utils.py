@@ -1,7 +1,7 @@
 from geoalchemy2 import functions, Geometry
-from sqlalchemy import select, or_, cast, exists, and_
+from sqlalchemy import select, or_, cast, and_
 
-import webapp.services.map as map
+from webapp.services import map
 from webapp.database.db_connection import get_session
 from webapp.database.models import User, Place, Visit, Region, District
 from webapp.logging_config import logger
@@ -104,5 +104,3 @@ def get_visited(tg_chat_id: int, unit_flag: str):
         session.close()
 
 
-if __name__ == '__main__':
-    create_user(345)

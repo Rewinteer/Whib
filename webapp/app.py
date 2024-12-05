@@ -5,11 +5,14 @@ import time
 from flask import Flask, request, jsonify, send_file
 from sqlalchemy.exc import IntegrityError
 
-from webapp.database import db_utils
-from webapp.services.cache import r_conn
-from webapp.services.map import get_visited_map
+from database import db_utils
+from services.cache import r_conn
+from services.map import get_visited_map
+from logging_config import logger
+
 
 app = Flask(__name__)
+
 
 @app.route('/user', methods=['POST'])
 def user():

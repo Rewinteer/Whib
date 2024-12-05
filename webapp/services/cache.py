@@ -2,7 +2,7 @@ import json
 
 import redis
 
-from config.redis_config import REDIS_DB, REDIS_HOST, REDIS_PORT
+from webapp.config.redis_config import REDIS_DB, REDIS_HOST, REDIS_PORT
 from webapp.logging_config import logger
 
 r_conn = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB, decode_responses=True)
