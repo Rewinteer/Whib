@@ -92,7 +92,7 @@ def get_unvisited_districts():
         tg_chat_id = int(request.args['tg_chat_id'])
         page = int(request.args.get('page', 1))
         page_size = int(request.args.get('size', 10))
-        rand = bool(request.args.get('random', False))
+        rand = eval(request.args.get('random', default='False'))
 
         cache_key = get_cache_key(tg_chat_id, get_unvisited_districts.__name__)
         cached_data = r_conn.get(cache_key)
@@ -104,7 +104,7 @@ def get_unvisited_districts():
                 return 'No data', 404
             json_data = json.dumps(data)
             r_conn.set(cache_key, json_data)
-        if rand:
+        if rand is True:
             random_district = random.choice(data)
             return random_district
         output = paginated_data(data, page, page_size)

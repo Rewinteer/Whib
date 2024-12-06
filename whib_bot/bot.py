@@ -74,10 +74,10 @@ async def handle_pagination(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         if context.user_data['operation'] == handle_prompt.__name__:
             response = await api_client.get_places(context.user_data['prompt'], page)
-            reply_markup = pagination.get_places_for_prompt_keyboard(response['data'], page, context.user_data['total_pages'])
+            reply_markup = keyboard.get_places_for_prompt_keyboard(response['data'], page, context.user_data['total_pages'])
         elif context.user_data['operation'] == unvisited_list.__name__:
             response = await api_client.get_unvisited_districts(context.user_data['tg_chat_id'], page)
-            reply_markup = pagination.get_unvisited_districts_keyboard(response['data'], page, context.user_data['total_pages'])
+            reply_markup = keyboard.get_unvisited_districts_keyboard(response['data'], page, context.user_data['total_pages'])
         else:
             raise FileNotFoundError('empty response')
 
@@ -205,8 +205,8 @@ async def unvisited_list(update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['data'] = response['data']
 
         await update.message.reply_text(
-            strings.bot_choose_option,
-            reply_markup=pagination.get_unvisited_districts_keyboard(
+            strings.bot_unvisited_districts_list,
+            reply_markup=keyboard.get_unvisited_districts_keyboard(
                 response['data'],
                 1,
                 response['total_pages']
@@ -221,6 +221,24 @@ async def unvisited_list(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(strings.bot_server_error)
 
 
+async def handle_selected_unvisited_place(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
+    return
+
+
+async def get_random_unvisited_district(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    tg_chat_id = update.effective_chat.id
+    try:
+        random_district = await api_client.get_random_unvisited_district(tg_chat_id)
+        await update.message.reply_text(f'Можаш наведаць {random_district} :)')
+    except FileNotFoundError:
+        await update.message.reply_text(strings.bot_empty_unvisited_districts)
+    except Exception as e:
+        logger.error(f'failed to get random district - {e}')
+        await update.message.reply_text(strings.bot_generic_error)
+
+
 def main():
     application = Application.builder().token(bot_config.WHIB_TOKEN).build()
 
@@ -229,12 +247,14 @@ def main():
         CommandHandler('visits_map_districts', visits_map_districts),
         CommandHandler('visits_map_regions', visits_map_regions),
         CommandHandler('unvisited_list', unvisited_list),
+        CommandHandler('random_unvisited_district', get_random_unvisited_district),
         MessageHandler(filters.TEXT & ~filters.COMMAND, handle_prompt),
         MessageHandler(filters.LOCATION & ~filters.COMMAND, handle_attached_location),
-        CallbackQueryHandler(handle_pagination, pattern="^(next|prev)$"),
-        CallbackQueryHandler(handle_place_selection, pattern="^[0-9]+$"),
-        CallbackQueryHandler(handle_confirmation, pattern="^(yes|no)$"),
-        CallbackQueryHandler(clear_message, pattern="^(discard|close)$"),
+        CallbackQueryHandler(handle_pagination, pattern='^(next|prev)$'),
+        CallbackQueryHandler(handle_place_selection, pattern='^[0-9]+$'),
+        CallbackQueryHandler(handle_confirmation, pattern='^(yes|no)$'),
+        CallbackQueryHandler(clear_message, pattern='^(discard|close)$'),
+        CallbackQueryHandler(handle_selected_unvisited_place, pattern='\D+$'),
     ])
     application.add_error_handler(error_handler)
 

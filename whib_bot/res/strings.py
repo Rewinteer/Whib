@@ -9,6 +9,7 @@ bot_hello = """
 і /visits_map_regions для абласцей.
 
 /unvisited_list верне табе спіс ненаведаных раёнаў.
+/random_unvisited_district верне табе рандомны ненаведаны раён.
 """
 bot_choose_option = 'Выберы патрэбнае месца са спісу ніжэй. Калі патрэбнага месца няма - пераправер запыт ці прымауй лакацыю.'
 bot_place_not_found = 'Па запыце нічога не знойдзена :('
@@ -19,6 +20,7 @@ bot_discard_button = 'адмена'
 bot_close_button = 'закрыць'
 bot_empty_visits = 'У базе наведаных месцаў пуста'
 bot_empty_unvisited_districts = 'Ненаведаных раёнаў не засталося!'
+bot_unvisited_districts_list = 'Спіс яшчэ не наведаных раёнаў:'
 
 def you_selected(place_name):
     return f'Выбрана {place_name}. Усё правільна?'
