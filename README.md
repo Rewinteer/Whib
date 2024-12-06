@@ -7,6 +7,24 @@ WHIB (Where Have I Been) Bot (can be accessed at [t.me/whibBY_bot]()) is a micro
 * **Redis**: Used for caching data to improve performance.
 * **PostGIS Database**: Stores and processes geographic user data.
 * **Telegram Bot**: Asynchronous bot for user interaction and API communication.
+## Libraries Used
+
+### Telegram Bot
+- `python-telegram-bot`
+- `aiohttp`
+
+### Web App
+- **API:**
+  - `Flask`
+- **Database Operations and ORM:**
+  - `Flask-SQLAlchemy`
+  - `GeoAlchemy2`
+- **Map Visualization:**
+  - `Geopandas`
+  - `Matplotlib`
+        
+        
+
 ## Features
 * **Travel Tracking**: Log and manage travel data through the Telegram bot — either find a place by its name or attach the location.
 * **Map Generation**: Generate maps highlighting visited regions or districts.
