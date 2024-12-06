@@ -1,13 +1,15 @@
 import json
 import os.path
+import random
 import time
 
 from flask import Flask, request, jsonify, send_file
 from sqlalchemy.exc import IntegrityError
 
 from database import db_utils
-from services.cache import r_conn
+from services.cache import r_conn, get_cache_key
 from services.map import get_visited_map
+from services.utils import paginated_data
 from logging_config import logger
 
 
@@ -75,20 +77,40 @@ def places():
             json_data = json.dumps(data)
             r_conn.set(prompt, json_data, ex=600)
 
-        start = (page - 1) * page_size
-        end = start + page_size
-        paginated_data = data[start:end]
-        total_items = len(data)
-
-        return jsonify({
-            'data': paginated_data,
-            'page': page,
-            'page_size': page_size,
-            'total_pages': (total_items + page_size - 1) // page_size
-        })
+        output = paginated_data(data, page, page_size)
+        return output
 
     except KeyError:
         return 'Search prompt was not provided', 400
+    except Exception as e:
+        return f'{e}', 500
+
+
+@app.route('/unvisited', methods=['GET'])
+def get_unvisited_districts():
+    try:
+        tg_chat_id = int(request.args['tg_chat_id'])
+        page = int(request.args.get('page', 1))
+        page_size = int(request.args.get('size', 10))
+        rand = bool(request.args.get('random', False))
+
+        cache_key = get_cache_key(tg_chat_id, get_unvisited_districts.__name__)
+        cached_data = r_conn.get(cache_key)
+        if cached_data:
+            data = json.loads(cached_data)
+        else:
+            data = db_utils.get_unvisited_districts(tg_chat_id=tg_chat_id)
+            if not data:
+                return 'No data', 404
+            json_data = json.dumps(data)
+            r_conn.set(cache_key, json_data)
+        if rand:
+            random_district = random.choice(data)
+            return random_district
+        output = paginated_data(data, page, page_size)
+        return output
+    except KeyError:
+        return 'tg_chat_id was not provided', 400
     except Exception as e:
         return f'{e}', 500
 

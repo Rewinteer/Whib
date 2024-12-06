@@ -97,10 +97,20 @@ def get_visited(tg_chat_id: int, unit_flag: str):
         logger.info(f'returned visited {unit} for chat id: {tg_chat_id}')
         return result
     except Exception as e:
-        logger.error(f'failed do load visited regions - {e}')
+        logger.error(f'failed to load visited regions - {e}')
         session.rollback()
         raise e
     finally:
         session.close()
 
 
+@cache_decorator
+def get_unvisited_districts(tg_chat_id):
+    try:
+        visited_list = get_visited(tg_chat_id=tg_chat_id, unit_flag=District.__name__)
+        unvisited_list = [district[0] for district in visited_list if not district[1]]
+        logger.info(f'returned unvisited list for chat id: {tg_chat_id}')
+        return unvisited_list
+    except Exception as e:
+        logger.error(f'failed to create unvisited list - {e}')
+        raise e

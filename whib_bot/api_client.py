@@ -53,3 +53,15 @@ async def get_map(tg_chat_id, unit_flag):
             if response.status == 204:
                 return None
             raise Exception(response.reason)
+
+async def get_unvisited_districts(tg_chat_id, page, rand=False):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f'{BASE_URL}/unvisited', params={'tg_chat_id': tg_chat_id, 'page': page, 'random': rand}) as response:
+            if response.status == 404:
+                msg = f'No unvisited districts found for id: {tg_chat_id}'
+                logger.error(msg)
+                raise FileNotFoundError(msg)
+            if response.status != 200:
+                logger.error(f'Failed to get unvisited districts from the API for the id: {tg_chat_id}')
+                raise Exception(response.reason)
+            return await response.json()

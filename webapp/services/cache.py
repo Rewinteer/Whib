@@ -8,7 +8,7 @@ from webapp.logging_config import logger
 r_conn = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB, decode_responses=True)
 
 
-def get_cache_key(tg_chat_id, operation, flag):
+def get_cache_key(tg_chat_id, operation, flag=None):
     key = f'{tg_chat_id}:{operation}'
     if flag:
         key = key + f':{flag}'

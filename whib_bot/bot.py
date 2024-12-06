@@ -2,7 +2,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes, MessageHandler, filters
 
 import api_client, bot_config
-import pagination
+import keyboard
 from res import strings
 from bot_logging_config import logger
 
@@ -36,6 +36,7 @@ async def handle_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE):
     page = 1
     context.user_data['prompt'] = user_prompt
     context.user_data['page'] = page
+    context.user_data['operation'] = handle_prompt.__name__
 
     try:
         response = await api_client.get_places(user_prompt, page)
@@ -44,7 +45,7 @@ async def handle_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(
             strings.bot_choose_option,
-            reply_markup=pagination.get_keyboard(
+            reply_markup=pagination.get_places_for_prompt_keyboard(
                 response['data'],
                 1,
                 response['total_pages']
@@ -70,12 +71,19 @@ async def handle_pagination(update: Update, context: ContextTypes.DEFAULT_TYPE):
             context.user_data['page'] -= 1
 
         page = context.user_data['page']
-        response = await api_client.get_places(context.user_data['prompt'], page)
-        context.user_data['data'] = response['data']
 
-        await query.edit_message_reply_markup(
-            reply_markup=pagination.get_keyboard(response['data'], page, context.user_data['total_pages'])
-        )
+        if context.user_data['operation'] == handle_prompt.__name__:
+            response = await api_client.get_places(context.user_data['prompt'], page)
+            reply_markup = pagination.get_places_for_prompt_keyboard(response['data'], page, context.user_data['total_pages'])
+        elif context.user_data['operation'] == unvisited_list.__name__:
+            response = await api_client.get_unvisited_districts(context.user_data['tg_chat_id'], page)
+            reply_markup = pagination.get_unvisited_districts_keyboard(response['data'], page, context.user_data['total_pages'])
+        else:
+            raise FileNotFoundError('empty response')
+
+        context.user_data['data'] = response['data']
+        await query.edit_message_reply_markup(reply_markup=reply_markup)
+
     except Exception as e:
         logger.error(f'failed to paginate data - {e}')
 
@@ -184,6 +192,33 @@ async def handle_attached_location(update: Update, context: ContextTypes.DEFAULT
         await update.message.reply_text(strings.bot_server_error)
 
 
+async def unvisited_list(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    tg_chat_id = update.effective_chat.id
+    page = 1
+    context.user_data['page'] = page
+    context.user_data['operation'] = unvisited_list.__name__
+    context.user_data['tg_chat_id'] = tg_chat_id
+
+    try:
+        response = await api_client.get_unvisited_districts(tg_chat_id, page)
+        context.user_data['total_pages'] = response['total_pages']
+        context.user_data['data'] = response['data']
+
+        await update.message.reply_text(
+            strings.bot_choose_option,
+            reply_markup=pagination.get_unvisited_districts_keyboard(
+                response['data'],
+                1,
+                response['total_pages']
+            )
+        )
+
+    except FileNotFoundError:
+        await update.message.reply_text(strings.bot_empty_unvisited_districts)
+
+    except Exception as e:
+        logger.error(f'Failed to process the prompt - {e}')
+        await update.message.reply_text(strings.bot_server_error)
 
 
 def main():
@@ -193,12 +228,13 @@ def main():
         CommandHandler('start', start),
         CommandHandler('visits_map_districts', visits_map_districts),
         CommandHandler('visits_map_regions', visits_map_regions),
+        CommandHandler('unvisited_list', unvisited_list),
         MessageHandler(filters.TEXT & ~filters.COMMAND, handle_prompt),
         MessageHandler(filters.LOCATION & ~filters.COMMAND, handle_attached_location),
         CallbackQueryHandler(handle_pagination, pattern="^(next|prev)$"),
         CallbackQueryHandler(handle_place_selection, pattern="^[0-9]+$"),
         CallbackQueryHandler(handle_confirmation, pattern="^(yes|no)$"),
-        CallbackQueryHandler(clear_message, pattern="^(discard)$"),
+        CallbackQueryHandler(clear_message, pattern="^(discard|close)$"),
     ])
     application.add_error_handler(error_handler)
 

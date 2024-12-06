@@ -7,14 +7,18 @@ bot_hello = """
 
 Каб атрымаць карту наведаных табою месцаў - юзай каманду /visits_map_districts для раёнаў 
 і /visits_map_regions для абласцей.
+
+/unvisited_list верне табе спіс ненаведаных раёнаў.
 """
 bot_choose_option = 'Выберы патрэбнае месца са спісу ніжэй. Калі патрэбнага месца няма - пераправер запыт ці прымауй лакацыю.'
 bot_place_not_found = 'Па запыце нічога не знойдзена :('
 bot_generic_error = 'Штосьці пайшло не так :('
-bot_server_error = 'Памылка сервера, паспрабуй крыху пазней яшчэ раз'
-bot_user_creation_error = 'Памылка ініцыялізацыі карыстача. Паспрабуй запусціць бота яшчэ раз'
+bot_server_error = 'Памылка сервера, паспрабуй крыху пазней яшчэ раз.'
+bot_user_creation_error = 'Памылка ініцыялізацыі карыстача. Паспрабуй запусціць бота яшчэ раз.'
 bot_discard_button = 'адмена'
+bot_close_button = 'закрыць'
 bot_empty_visits = 'У базе наведаных месцаў пуста'
+bot_empty_unvisited_districts = 'Ненаведаных раёнаў не засталося!'
 
 def you_selected(place_name):
     return f'Выбрана {place_name}. Усё правільна?'
