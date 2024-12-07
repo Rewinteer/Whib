@@ -45,7 +45,7 @@ async def handle_prompt(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await update.message.reply_text(
             strings.bot_choose_option,
-            reply_markup=pagination.get_places_for_prompt_keyboard(
+            reply_markup=keyboard.get_places_for_prompt_keyboard(
                 response['data'],
                 1,
                 response['total_pages']
