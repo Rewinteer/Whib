@@ -108,7 +108,7 @@ def get_visited(tg_chat_id: int, unit_flag: str):
 def get_unvisited_districts(tg_chat_id):
     try:
         visited_list = get_visited(tg_chat_id=tg_chat_id, unit_flag=District.__name__)
-        unvisited_list = [district[0] for district in visited_list if not district[1]]
+        unvisited_list = sorted([district[0] for district in visited_list if not district[1]])
         logger.info(f'returned unvisited list for chat id: {tg_chat_id}')
         return unvisited_list
     except Exception as e:

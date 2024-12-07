@@ -202,7 +202,7 @@ async def unvisited_list(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         response = await api_client.get_unvisited_districts(tg_chat_id, page)
         context.user_data['total_pages'] = response['total_pages']
-        context.user_data['data'] = sorted(response['data'])
+        context.user_data['data'] = response['data']
 
         await update.message.reply_text(
             strings.bot_unvisited_districts_list,
