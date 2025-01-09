@@ -94,16 +94,9 @@ def get_unvisited_districts():
         page_size = int(request.args.get('size', 10))
         rand = eval(request.args.get('random', default='False'))
 
-        cache_key = get_cache_key(tg_chat_id, get_unvisited_districts.__name__)
-        cached_data = r_conn.get(cache_key)
-        if cached_data:
-            data = json.loads(cached_data)
-        else:
-            data = db_utils.get_unvisited_districts(tg_chat_id=tg_chat_id)
-            if not data:
-                return 'No data', 404
-            json_data = json.dumps(data)
-            r_conn.set(cache_key, json_data)
+        data = db_utils.get_unvisited_districts(tg_chat_id=tg_chat_id)
+        if not data:
+            return 'No data', 404
         if rand is True:
             random_district = random.choice(data)
             return random_district
@@ -113,6 +106,21 @@ def get_unvisited_districts():
         return 'tg_chat_id was not provided', 400
     except Exception as e:
         return f'{e}', 500
+
+
+@app.route('/geojson', methods=['GET', 'POST'])
+def geojson():
+    if request.method == 'GET':
+        try:
+            tg_chat_id = int(request.args['tg_chat_id'])
+            data = db_utils.get_visits_json(tg_chat_id=tg_chat_id)
+            if data:
+                return jsonify({'data': data})
+            return 'visits list is empty', 404
+        except Exception as e:
+            return f'{e}', 500
+    elif request.method == 'POST':
+        ...
 
 
 if __name__=='__main__':

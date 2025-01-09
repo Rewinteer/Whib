@@ -1,3 +1,5 @@
+import json
+
 from geoalchemy2 import functions, Geometry
 from sqlalchemy import select, or_, cast, and_
 
@@ -74,7 +76,7 @@ def get_visited(tg_chat_id: int, unit_flag: str):
 
     session = next(get_session())
     try:
-        visits =(
+        visits = (
             select(
                 1
             ).where(
@@ -113,4 +115,32 @@ def get_unvisited_districts(tg_chat_id):
         return unvisited_list
     except Exception as e:
         logger.error(f'failed to create unvisited list - {e}')
+        raise e
+
+
+@cache_decorator
+def get_visits_json(tg_chat_id):
+    session = next(get_session())
+    try:
+        stmt = select(functions.ST_AsGeoJSON(Visit.location)).where(Visit.tg_chat_id == tg_chat_id)
+        visits = session.execute(stmt).scalars().all()
+        if visits:
+            visits_geojson = {
+                'type': 'FeatureCollection',
+                'features': []
+            }
+            n = 0
+            for visit in visits:
+                feature = {
+                    'type': 'Feature',
+                    'geometry': json.loads(visit),
+                    'properties': {
+                        'number': n
+                    }
+                }
+                visits_geojson['features'].append(feature)
+                n += 1
+            return visits_geojson
+    except Exception as e:
+        logger.error(f'Failed to get visits json - {e}')
         raise e

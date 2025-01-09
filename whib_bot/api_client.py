@@ -1,3 +1,5 @@
+import json
+
 import aiohttp
 
 from bot_logging_config import logger
@@ -79,3 +81,17 @@ async def get_random_unvisited_district(tg_chat_id):
                 raise Exception(response.reason)
             district = await response.text()
             return district
+
+
+async def get_visits_json(tg_chat_id):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f'{BASE_URL}/geojson', params={'tg_chat_id': tg_chat_id}) as response:
+            if response.status == 404:
+                msg = f'The visits list is empty for id: {tg_chat_id}'
+                logger.info(msg)
+                raise FileNotFoundError(msg)
+            if response.status != 200:
+                logger.error(f'Failed to get a visits geojson for id {tg_chat_id}')
+                raise Exception(response.reason)
+            geojson = await response.json()
+            return json.dumps(geojson['data'])

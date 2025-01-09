@@ -1,3 +1,6 @@
+import json
+from io import BytesIO
+
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes, MessageHandler, filters
 
@@ -239,6 +242,20 @@ async def get_random_unvisited_district(update: Update, context: ContextTypes.DE
         await update.message.reply_text(strings.bot_generic_error)
 
 
+async def get_visits_json(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    tg_chat_id = update.effective_chat.id
+    try:
+        visits_json = await api_client.get_visits_json(397277542)
+        json_bytes = BytesIO(visits_json.encode('utf-8'))
+        json_bytes.name = 'visited_locations.json'
+        await context.bot.send_document(tg_chat_id, json_bytes)
+    except FileNotFoundError:
+        await update.message.reply_text(strings.bot_empty_visits)
+    except Exception as e:
+        logger.error(f'failed to get visits json - {e}')
+        await update.message.reply_text(strings.bot_generic_error)
+
+
 def main():
     application = Application.builder().token(bot_config.WHIB_TOKEN).build()
 
@@ -248,6 +265,7 @@ def main():
         CommandHandler('visits_map_regions', visits_map_regions),
         CommandHandler('unvisited_list', unvisited_list),
         CommandHandler('random_unvisited_district', get_random_unvisited_district),
+        CommandHandler('visits_json', get_visits_json),
         MessageHandler(filters.TEXT & ~filters.COMMAND, handle_prompt),
         MessageHandler(filters.LOCATION & ~filters.COMMAND, handle_attached_location),
         CallbackQueryHandler(handle_pagination, pattern='^(next|prev)$'),
