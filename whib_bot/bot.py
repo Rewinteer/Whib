@@ -245,7 +245,7 @@ async def get_random_unvisited_district(update: Update, context: ContextTypes.DE
 async def get_visits_json(update: Update, context: ContextTypes.DEFAULT_TYPE):
     tg_chat_id = update.effective_chat.id
     try:
-        visits_json = await api_client.get_visits_json(397277542)
+        visits_json = await api_client.get_visits_json(tg_chat_id)
         json_bytes = BytesIO(visits_json.encode('utf-8'))
         json_bytes.name = 'visited_locations.json'
         await context.bot.send_document(tg_chat_id, json_bytes)
