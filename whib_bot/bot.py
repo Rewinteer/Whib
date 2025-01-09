@@ -10,6 +10,10 @@ from res import strings
 from bot_logging_config import logger
 
 
+MAX_FILE_SIZE = 2097152
+ALLOWED_FILE_EXTENSIONS = {'json', 'geojson'}
+
+
 async def error_handler(update, context):
     logger.error(f'Exception while handling an update - {context.error}')
     await update.message.reply_text(strings.bot_generic_error)
@@ -256,6 +260,30 @@ async def get_visits_json(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(strings.bot_generic_error)
 
 
+async def handle_attached_json(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    tg_chat_id = update.effective_chat.id
+    try:
+        document = update.message.document
+        extension = document.file_name.lower().split('.')[-1]
+        if document.file_size > MAX_FILE_SIZE or extension not in ALLOWED_FILE_EXTENSIONS:
+            raise AttributeError
+        file = await update.message.document.get_file()
+        downloaded = await file.download_as_bytearray()
+        data = bytearray.decode(downloaded)
+        if not data.startswith('{') or not data.endswith('}'):
+            raise AttributeError
+        await api_client.import_json(tg_chat_id, data)
+        await update.message.reply_text(
+            strings.bot_geojson_imported
+        )
+    except (AttributeError, KeyError):
+        await update.message.reply_text(
+            strings.bot_geojson_wrong_format
+        )
+    except Exception as e:
+        await update.message.reply_text(strings.bot_server_error)
+
+
 def main():
     application = Application.builder().token(bot_config.WHIB_TOKEN).build()
 
@@ -268,6 +296,7 @@ def main():
         CommandHandler('visits_json', get_visits_json),
         MessageHandler(filters.TEXT & ~filters.COMMAND, handle_prompt),
         MessageHandler(filters.LOCATION & ~filters.COMMAND, handle_attached_location),
+        MessageHandler(filters.ATTACHMENT & ~filters.COMMAND, handle_attached_json),
         CallbackQueryHandler(handle_pagination, pattern='^(next|prev)$'),
         CallbackQueryHandler(handle_place_selection, pattern='^[0-9]+$'),
         CallbackQueryHandler(handle_confirmation, pattern='^(yes|no)$'),

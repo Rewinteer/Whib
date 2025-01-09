@@ -95,3 +95,22 @@ async def get_visits_json(tg_chat_id):
                 raise Exception(response.reason)
             geojson = await response.json()
             return json.dumps(geojson['data'])
+
+
+async def import_json(tg_chat_id, data):
+    async with aiohttp.ClientSession() as session:
+        async with session.post(
+            url=f'{BASE_URL}/geojson',
+            headers={'Content-Type': 'application/json'},
+            json={
+                'data': data,
+                'tg_chat_id': tg_chat_id
+            },
+        ) as response:
+            if response.status != 201:
+                if response.status == 400:
+                    logger.error(f'failed to import json - {response.reason}')
+                    raise KeyError
+                else:
+                    logger.error(f'failed to import json - {response.reason}')
+                    raise Exception(response.reason)

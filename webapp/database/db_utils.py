@@ -2,6 +2,7 @@ import json
 
 from geoalchemy2 import functions, Geometry
 from sqlalchemy import select, or_, cast, and_
+from sqlalchemy.dialects.postgresql import insert
 
 from webapp.services import map
 from webapp.database.db_connection import get_session
@@ -144,3 +145,39 @@ def get_visits_json(tg_chat_id):
     except Exception as e:
         logger.error(f'Failed to get visits json - {e}')
         raise e
+
+
+@delete_cache_decorator
+def import_json(tg_chat_id, data):
+    session = next(get_session())
+    try:
+        features = data['features']
+        visits = []
+        for feature in features:
+            if feature['geometry']['type'] == 'Point':
+                coordinates = feature['geometry']['coordinates']
+                lon = coordinates[0]
+                lat = coordinates[1]
+                visit = {'tg_chat_id': tg_chat_id, 'location': f'POINT ({lon} {lat})'}
+                visits.append(visit)
+
+        if features:
+            session.execute(
+                insert(Visit),
+                visits
+            )
+            map.remove_generated_maps(tg_chat_id)
+            logger.info(f'imported json data for id {tg_chat_id}')
+            session.commit()
+            return
+        raise KeyError
+    except KeyError as e:
+        session.rollback()
+        logger.error(f'Json data cannot be parsed for id {tg_chat_id} - {e}')
+        raise KeyError
+    except Exception as e:
+        session.rollback()
+        logger.error(f'failed to load json data for id {tg_chat_id} - {e}')
+        raise e
+    finally:
+        session.close()

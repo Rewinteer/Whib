@@ -14,7 +14,7 @@ from logging_config import logger
 
 
 app = Flask(__name__)
-
+ALLOWED_FILE_EXTENSIONS = {'json', 'geojson'}
 
 @app.route('/user', methods=['POST'])
 def user():
@@ -108,6 +108,11 @@ def get_unvisited_districts():
         return f'{e}', 500
 
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_FILE_EXTENSIONS
+
+
 @app.route('/geojson', methods=['GET', 'POST'])
 def geojson():
     if request.method == 'GET':
@@ -120,7 +125,15 @@ def geojson():
         except Exception as e:
             return f'{e}', 500
     elif request.method == 'POST':
-        ...
+        try:
+            tg_chat_id = request.json['tg_chat_id']
+            data = json.loads(request.json['data'])
+            db_utils.import_json(tg_chat_id=tg_chat_id, data=data)
+            return 'Visits successfully imported', 201
+        except KeyError:
+            return "Json doesn't contain necessary fields. Check the geojson specs", 400
+        except Exception as e:
+            return f'Unsupported data format - {e}', 415
 
 
 if __name__=='__main__':
